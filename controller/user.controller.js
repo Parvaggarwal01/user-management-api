@@ -59,17 +59,10 @@ export const createUser = (req, res) => {
 
 export const updateUser = (req, res) => {
   try {
-    const { id } = req.params;
+    const { id } = req.body;
     const { name, email } = req.body;
 
     const userIndex = users.findIndex((user) => user.id === id);
-
-    if (userIndex === -1) {
-      return res.status(404).json({
-        success: false,
-        message: "User not found",
-      });
-    }
 
     if (name) users[userIndex].name = name;
     if (email) users[userIndex].email = email;

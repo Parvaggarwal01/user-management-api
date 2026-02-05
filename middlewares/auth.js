@@ -20,7 +20,7 @@ export const validateUserById = (req, res, next) => {
 }
 
 export const validateUserId = (req, res, next) => {
-  const {id} = req.params;
+  const {id} = req.body;
 
   if(!id || id.length < 5){
     return res.status(400).json({
@@ -31,7 +31,7 @@ export const validateUserId = (req, res, next) => {
   next();
 }
 
-export const validateUserEmail = (req, res, next) => {
+export const validateUser = (req, res, next) => {
   const { name, email } = req.body;
 
   if (!name || !email) {
