@@ -12,11 +12,12 @@ import {
   validateUserId,
   validateUser,
   validateUserById,
+  tokenVerify
 } from "../middlewares/auth.js";
 
 const router = express.Router();
 
-router.get("/", checkAuth, getUser);
+router.get("/",tokenVerify, checkAuth, getUser);
 router.get("/id", validateUserById, getUserById);
 router.post("/", validateUser, createUser);
 router.put("/update", validateUserId, validateUser, updateUser);

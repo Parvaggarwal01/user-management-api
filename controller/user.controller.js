@@ -1,4 +1,9 @@
 import { users } from "../data/users.js";
+import {
+  createUser as createUserService,
+  deleteUserService,
+  updateUserService,
+} from "../service/user.service.js";
 
 export const getUser = (req, res) => {
   res.status(200).json({
@@ -36,14 +41,7 @@ export const getUserById = (req, res) => {
 export const createUser = (req, res) => {
   try {
     const { name, email } = req.body;
-
-    const newUser = {
-      id: Date.now().toString(),
-      name,
-      email,
-    };
-
-    users.push(newUser);
+    const newUser = createUserService(name, email);
 
     res.status(201).json({
       success: true,
@@ -62,14 +60,11 @@ export const updateUser = (req, res) => {
     const { id } = req.body;
     const { name, email } = req.body;
 
-    const userIndex = users.findIndex((user) => user.id === id);
-
-    if (name) users[userIndex].name = name;
-    if (email) users[userIndex].email = email;
+    const updateUser = updateUserService(id, name, email);
 
     res.status(200).json({
       success: true,
-      data: users[userIndex],
+      data: updateUser,
     });
   } catch (error) {
     res.status(500).json({
@@ -83,16 +78,14 @@ export const deleteUser = (req, res) => {
   try {
     const { id } = req.params;
 
-    const userIndex = users.findIndex((user) => user.id === id);
+    const isDeleted = deleteUserService(id);
 
-    if (userIndex === -1) {
+    if (!isDeleted) {
       return res.status(404).json({
         success: false,
         message: "User not found",
       });
     }
-
-    users.splice(userIndex, 1);
 
     res.status(200).json({
       success: true,
