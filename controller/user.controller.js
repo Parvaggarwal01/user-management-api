@@ -10,8 +10,9 @@ export const getUser = (req, res) => {
 
 export const getUserById = (req, res) => {
   try {
-    const { id } = req.params;
+    const { id } = req.body;
     const user = users.find((user) => user.id === id);
+    console.log(id);
 
     if (!user) {
       return res.status(404).json({

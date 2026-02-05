@@ -7,6 +7,17 @@ export const checkAuth = (req, res, next) => {
     console.log('Failed Checked');
   }
 }
+export const validateUserById = (req, res, next) => {
+  const {id} = req.body;
+
+  if(!id || id.length < 5){
+    return res.status(400).json({
+      success: false,
+      message: "Inavlid User ID"
+    })
+  }
+  next();
+}
 
 export const validateUserId = (req, res, next) => {
   const {id} = req.params;
@@ -31,4 +42,3 @@ export const validateUserEmail = (req, res, next) => {
   }
   next();
 }
-
