@@ -1,4 +1,34 @@
+let success = true;
 export const checkAuth = (req, res, next) => {
-  console.log("Auth Checked");
+  if(success){
+    console.log('Auth Checked');
+    next();
+  }else{
+    console.log('Failed Checked');
+  }
+}
+
+export const validateUserId = (req, res, next) => {
+  const {id} = req.params;
+
+  if(!id || id.length < 5){
+    return res.status(400).json({
+      success: false,
+      message: "Inavlid User ID"
+    })
+  }
   next();
 }
+
+export const validateUserEmail = (req, res, next) => {
+  const { name, email } = req.body;
+
+  if (!name || !email) {
+      return res.status(400).json({
+        success: false,
+        message: "Name and email are required",
+    });
+  }
+  next();
+}
+
