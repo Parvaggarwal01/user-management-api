@@ -1,31 +1,66 @@
-import { users } from "../data/users.js";
+import { user as User } from "../models/user.model.js";
 
-export const createUser = (name, email) => {
-  const newUser = {
-    id: Date.now().toString(),
+export const getUsersService = async () => {
+  return User.find();
+};
+
+export const getUserByIdService = async (id) => {
+  return User.findById(id);
+};
+
+export const getUserByActiveService = async () => {
+  return User.find({ isActive: true });
+};
+
+export const createUser = async (name, email, password, role, isActive) => {
+  const newUser = new User({
     name,
     email,
-  };
+    password,
+    role,
+    isActive,
+  });
 
-  users.push(newUser);
-  return newUser;
+  return newUser.save();
 };
 
-export const deleteUserService = (id) => {
-  const index = users.findIndex((u) => u.id === id);
-
-  if (index === -1) {
-    return false;
-  }
-  users.splice(index, 1);
-  return true;
+export const deleteUserService = async (id) => {
+  const deletedUser = await User.findByIdAndDelete(id);
+  return deletedUser !== null;
 };
 
-export const updateUserService = (id, name, email) => {
-  const index = users.findIndex((u) => u.id === id);
+export const updateUserService = async (
+  id,
+  name,
+  email,
+  password,
+  role,
+  isActive,
+) => {
+  const updatePayload = {};
+  if (name) updatePayload.name = name;
+  if (email) updatePayload.email = email;
+  if (password) updatePayload.password = password;
+  if (role) updatePayload.role = role;
+  if (isActive !== undefined) updatePayload.isActive = isActive;
 
-  if (name) users[index].name = name;
-  if (email) users[index].email = email;
+  return User.findByIdAndUpdate(id, updatePayload, {
+    new: true,
+    runValidators: true,
+  });
+};
 
-  return users;
+export const updateDetailsByEmailService = async (email, password) => {
+  const updatePayload = {};
+  if (password) updatePayload.password = password;
+
+  return User.findOneAndUpdate({ email: email }, updatePayload, {
+    new: true,
+    runValidators: true,
+  });
+};
+
+export const deleteByEmailService = async (email) => {
+  const deletedUser = await User.findOneAndDelete({ email: email });
+  return deletedUser !== null;
 };

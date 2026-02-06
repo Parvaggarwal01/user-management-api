@@ -2,9 +2,12 @@ import express from "express";
 import {
   getUser,
   getUserById,
+  getUserByActive,
   createUser,
   updateUser,
+  updateDetailsByEmail,
   deleteUser,
+  deleteByEmail,
 } from "../controller/user.controller.js";
 
 import {
@@ -12,15 +15,18 @@ import {
   validateUserId,
   validateUser,
   validateUserById,
-  tokenVerify
+  tokenVerify,
 } from "../middlewares/auth.js";
 
 const router = express.Router();
 
-router.get("/",tokenVerify, checkAuth, getUser);
+router.get("/", tokenVerify, checkAuth, getUser);
+router.get("/active", getUserByActive);
 router.get("/id", validateUserById, getUserById);
 router.post("/", validateUser, createUser);
-router.put("/update", validateUserId, validateUser, updateUser);
+router.put("/update", validateUserId, updateUser);
+router.put("/update-password", updateDetailsByEmail);
+router.delete("/delete-email", deleteByEmail);
 router.delete("/:id", validateUserId, deleteUser);
 
 export default router;

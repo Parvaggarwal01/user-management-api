@@ -20,7 +20,7 @@ export const validateUserById = (req, res, next) => {
 };
 
 export const validateUserId = (req, res, next) => {
-  const { id } = req.body;
+  const id = req.body.id || req.params.id;
 
   if (!id || id.length < 5) {
     return res.status(400).json({
@@ -32,12 +32,12 @@ export const validateUserId = (req, res, next) => {
 };
 
 export const validateUser = (req, res, next) => {
-  const { name, email } = req.body;
+  const { name, email, password } = req.body;
 
-  if (!name || !email) {
+  if (!name || !email || !password) {
     return res.status(400).json({
       success: false,
-      message: "Name and email are required",
+      message: "Name, email and password are required",
     });
   }
   next();
