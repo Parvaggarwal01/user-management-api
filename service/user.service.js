@@ -1,3 +1,4 @@
+import post from "../models/post.js";
 import { user as User } from "../models/user.model.js";
 
 export const getUsersService = async () => {
@@ -63,4 +64,20 @@ export const updateDetailsByEmailService = async (email, password) => {
 export const deleteByEmailService = async (email) => {
   const deletedUser = await User.findOneAndDelete({ email: email });
   return deletedUser !== null;
+};
+
+export const createPostService = async (title, content, userId) => {
+  const newPost = new post({
+    title,
+    content,
+    user: userId,
+  });
+
+  const savedPost = await newPost.save();
+  await savedPost.populate("user", "name email role isActive");
+  return savedPost;
+};
+
+export const getPostService = async () => {
+  return post.find().populate("user", "name email role isActive");
 };

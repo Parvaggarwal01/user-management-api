@@ -7,6 +7,8 @@ import {
   createUser as createUserService,
   deleteUserService,
   updateUserService,
+  createPostService,
+  getPostService,
 } from "../service/user.service.js";
 
 export const getUser = async (req, res) => {
@@ -186,7 +188,7 @@ export const deleteByEmail = async (req, res) => {
     if (!email) {
       return res.status(400).json({
         success: false,
-        message: 'Email is required',
+        message: "Email is required",
       });
     }
 
@@ -195,13 +197,54 @@ export const deleteByEmail = async (req, res) => {
     if (!isDeleted) {
       return res.status(404).json({
         success: false,
-        message: 'User not found',
+        message: "User not found",
       });
     }
 
     res.status(200).json({
       success: true,
-      message: 'User deleted successfully',
+      message: "User deleted successfully",
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+export const createPost = async (req, res) => {
+  try {
+    const { title, content, user } = req.body;
+
+    if (!title || !content || !user) {
+      return res.status(400).json({
+        success: false,
+        message: "Title, content and user ID are required",
+      });
+    }
+
+    const newPost = await createPostService(title, content, user);
+
+    res.status(201).json({
+      success: true,
+      data: newPost,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+export const getPosts = async (req, res) => {
+  try {
+    const posts = await getPostService();
+    res.status(200).json({
+      success: true,
+      count: posts.length,
+      data: posts,
     });
   } catch (error) {
     res.status(500).json({
